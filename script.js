@@ -1,7 +1,7 @@
 // Global variables
 var searchHistory = [];
 var weatherApiRootUrl = 'https://api.openweathermap.org';
-var weatherApiKey = 'd91f911bcf2c0f925fb6535547a5ddc9';
+var weatherApiKey = 'fff3bb97f515777a72c58b794ecc8b3e';
 
 // DOM element references
 var searchForm = document.querySelector('#search-form');
@@ -127,7 +127,6 @@ function renderForecastCard(forecast) {
   windEl.setAttribute('class', 'card-text');
   humidityEl.setAttribute('class', 'card-text');
 
-  // Add content to elements
   cardTitle.textContent = dayjs(forecast.dt_txt).format('M/D/YYYY');
   weatherIcon.setAttribute('src', iconUrl);
   weatherIcon.setAttribute('alt', iconDescription);
@@ -138,7 +137,6 @@ function renderForecastCard(forecast) {
   forecastContainer.append(col);
 }
 
-// Function to display 5 day forecast.
 function renderForecast(dailyForecast) {
   // Create unix timestamps for start and end of 5 day forecast
   var startDt = dayjs().add(1, 'day').startOf('day').unix();
@@ -172,14 +170,13 @@ function renderItems(city, data) {
   renderForecast(data.list);
 }
 
-// Fetches weather data for given location from the Weather Geolocation
-// endpoint; then, calls functions to display current and forecast weather data.
 function fetchWeather(location) {
   var { lat } = location;
   var { lon } = location;
   var city = location.name;
 
-  var apiUrl = `${weatherApiRootUrl}/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${weatherApiKey}`;
+  var apiUrl = `${weatherApiRootUrl}/data/2.5/forecast?q=${city,'name'}&appid=${weatherApiKey}`;
+
 
   fetch(apiUrl)
     .then(function (res) {
