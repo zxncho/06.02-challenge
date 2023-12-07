@@ -12,7 +12,7 @@ var searchHistoryContainer = document.querySelector('#history');
 dayjs.extend(window.dayjs_plugin_utc);
 dayjs.extend(window.dayjs_plugin_timezone);
 
-function renderSearchHistory() {
+function renderHistory() {
   searchHistoryContainer.innerHTML = '';
 
   
@@ -30,7 +30,7 @@ function renderSearchHistory() {
 }
 
 
-function appendToHistory(search) {
+function appendTo(search) {
 
   if (searchHistory.indexOf(search) !== -1) {
     return;
@@ -38,7 +38,7 @@ function appendToHistory(search) {
   searchHistory.push(search);
 
   localStorage.setItem('search-history', JSON.stringify(searchHistory));
-  renderSearchHistory();
+  renderHistory();
 }
 
 
@@ -47,7 +47,7 @@ function initSearchHistory() {
   if (storedHistory) {
     searchHistory = JSON.parse(storedHistory);
   }
-  renderSearchHistory();
+  renderHistory();
 }
 
 
@@ -183,7 +183,7 @@ function fetchWeather(location) {
     });
 }
 
-function fetchCoords(search) {
+function fetchCoordinates(search) {
   var apiUrl = `${weatherApiRootUrl}/geo/1.0/direct?q=${search}&limit=5&appid=${weatherApiKey}`;
 
   fetch(apiUrl)
@@ -194,7 +194,7 @@ function fetchCoords(search) {
       if (!data[0]) {
         alert('Location not found');
       } else {
-        appendToHistory(search);
+        appendTo(search);
         fetchWeather(data[0]);
       }
     })
@@ -203,7 +203,7 @@ function fetchCoords(search) {
     });
 }
 
-function handleSearchFormSubmit(e) {
+function handleSubmit(e) {
 
   if (!searchInput.value) {
     return;
@@ -211,11 +211,11 @@ function handleSearchFormSubmit(e) {
 
   e.preventDefault();
   var search = searchInput.value.trim();
-  fetchCoords(search);
+  fetchCoordinates(search);
   searchInput.value = '';
 }
 
-function handleSearchHistoryClick(e) {
+function handleSearchHistory(e) {
   
   if (!e.target.matches('.btn-history')) {
     return;
@@ -223,9 +223,9 @@ function handleSearchHistoryClick(e) {
 
   var btn = e.target;
   var search = btn.getAttribute('data-search');
-  fetchCoords(search);
+  fetchCoordinates(search);
 }
 
 initSearchHistory();
-searchForm.addEventListener('submit', handleSearchFormSubmit);
-searchHistoryContainer.addEventListener('click', handleSearchHistoryClick);
+searchForm.addEventListener('submit', handleSubmit);
+searchHistoryContainer.addEventListener('click', handleSearchHistory);
